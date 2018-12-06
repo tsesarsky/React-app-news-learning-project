@@ -1,1 +1,1 @@
-# React-app-news-learning-project
+# React-app-news (learning project)
