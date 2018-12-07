@@ -8,7 +8,7 @@
 
     <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
     <style>
-        .none {
+       .none {
             display: none;
         }
         body {
@@ -34,14 +34,41 @@
             margin: 10px 0 0 0;
             display: block;
         }
+        .add {
+            margin: 0 5px 5px 0;
+            width: 210px;
+            border: 1px dashed rgba(0, 89, 181, 0.82);
+            padding: 5px;
+        }
+        .add-author, .add-text, .add-btn, .add-checkrule {
+            display: block;
+            margin: 0 0 5px 0;
+            padding: 5px;
+            width: 94%;
+            border: 1px solid rgba(0, 89, 181, 0.82);
+        }
+        .add-checkrule {
+            border: none;
+            font-size: 12px;
+        }
+        .add-btn {
+            box-sizing: content-box;
+            color: #FFF;
+            text-transform: uppercase;
+            background: #007DDC;
+        }
+        .add-btn:disabled {
+            background: #CCC;
+            color: #999;
+        }
     </style>
 </head>
 <body>
- 
+
     <div id="root"></div>
- 
+
     <script type="text/babel">
- 
+
         const myNews = [
             {
                 id: 1,
@@ -68,12 +95,12 @@
                 bigText: 'Еще есть группа VK, telegram и канал на youtube! Вся инфа на сайте, не реклама!'
             }
         ];
-     
+    
         class News extends React.Component {
             renderNews = () => {
                 const {data} = this.props;
                 let newsTemplate;
- 
+
                 if (data.length) {
                     newsTemplate = data.map(function (item) {
                         return (
@@ -84,7 +111,7 @@
                     newsTemplate = <p>К сожалению новостей нет</p>
                 }
                 return newsTemplate;
-             }
+            }
             render () {
                 const {data} = this.props;
                 return (
@@ -97,7 +124,7 @@
                 );
             }
         }
- 
+
         class Article extends React.Component {
             state = {
                 visible: false,
@@ -119,23 +146,50 @@
                 )
             }
         }
-        /*Article.propTypes = {
-            data: PropTypes.shape ({
-                author: PropTypes.string.isRequired,
-                text: PropTypes.string.isRequired,
-                bigText: PropTypes.string.isRequired
-            })
-        }*/
-         
+
+        class Add extends React.Component {
+            state = {
+                name: "",
+                text: "",
+                agree: false,
+            }
+            onBtnClickHandler = (e) => {
+                e.preventDefault()
+            }
+            handleNameChange = (e) => {
+                this.setState({name: e.currentTarget.value})
+            }
+            handleTextChange = (e) => {
+                this.setState({text: e.currentTarget.value})
+            }
+            handleCheckboxChange =(e) => {
+                this.setState({agree: e.currentTarget.checked})
+            }
+            render() {
+                const {name, text, agree} = this.state;
+                return (
+                    <form className="add">
+                        <input type="text" onChange={this.handleNameChange} className="add-author" placeholder="Ваше имя" value={name} />
+                        <textarea onChange={this.handleTextChange} className="add-text" placeholder="Текст новости" value={text}></textarea>
+                        <label className="add-checkrule">
+                        <input type="checkbox" onChange={this.handleCheckboxChange} />Я согласен с правилами
+                        </label>
+                        <button className="add-btn" onClick={this.onBtnClickHandler}>Показать alert</button>
+                    </form>
+                )
+            }
+        }
+        
         const App = () => {
             return (
                 <div>
+                    <Add />
                     <h3>Новости</h3>
                     <News data={myNews} />
                 </div>
                 )
         }
- 
+
         ReactDOM.render(
             <App />,
             document.getElementById('root')
