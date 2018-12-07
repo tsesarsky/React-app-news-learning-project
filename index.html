@@ -8,7 +8,7 @@
 
     <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
     <style>
-       .none {
+        .none {
             display: none;
         }
         body {
@@ -26,50 +26,54 @@
             box-shadow: 2px 2px 5px -1px rgb(0, 81, 202);
             padding: 3px 5 px;
         }
-        .news_author {
+        .news-author {
             text-decoration: underline;
             color: #007DDC;
         }
-        .news_count {
+        .news-count {
             margin: 10px 0 0 0;
             display: block;
         }
     </style>
 </head>
 <body>
-
+ 
     <div id="root"></div>
-
+ 
     <script type="text/babel">
-
+ 
         const myNews = [
             {
                 id: 1,
                 author: 'Саша Печкин',
-                text: 'В четверг, четвертого числа...'
+                text: 'В четверг, четвертого числа...',
+                bigText: 'В четыре с четвертью часа вернулись мы после салюта.'
             },
             {
                 id: 2,
                 author: 'Просто Вася',
-                text: 'Считаю, что $ должен стоить 35 рублей!'
+                text: 'Считаю, что $ должен стоить 35 рублей!',
+                bigText: 'А евро 42!'
             },
             {
                 id: 3,
                 author: 'Max Frontend',
-                text: 'Прошло 2 года с прошлых учебников, а $ так же не стоит 35 рублей'
+                text: 'Прошло 2 года с прошлых учебников, а $ так же не стоит 35 рублей',
+                bigText: 'А евро опять выше 70.'
             },
             {
                 id: 4,
                 author: 'Гость',
-                text: 'Бесплатно, без смс, про реакт, заходи - http://maxfrontend.ru'
+                text: 'Бесплатно, без смс, про реакт, заходи - http://maxfrontend.ru',
+                bigText: 'Еще есть группа VK, telegram и канал на youtube! Вся инфа на сайте, не реклама!'
             }
         ];
-    
+     
         class News extends React.Component {
             renderNews = () => {
                 const {data} = this.props;
                 let newsTemplate;
-
+ 
                 if (data.length) {
                     newsTemplate = data.map(function (item) {
                         return (
@@ -80,32 +84,49 @@
                     newsTemplate = <p>К сожалению новостей нет</p>
                 }
                 return newsTemplate;
-            }
+             }
             render () {
                 const {data} = this.props;
                 return (
                     <div className="news">
                         {this.renderNews()}
                         {
-                            data.length ? <strong className={"news_count"}>Всего новостей: {data.length}</strong> : null
+                            data.length ? <strong className={"news-count"}>Всего новостей: {data.length}</strong> : null
                         }
                     </div>
                 );
             }
         }
-
+ 
         class Article extends React.Component {
+            state = {
+                visible: false,
+            }
+            hendleReadMoreClick = (e) => {
+                e.preventDefault();
+                this.setState({visible: true});
+            }
             render () {
-                const {author, text} = this.props.data;
+                const {author, text, bigText} = this.props.data;
+                const {visible} = this.state;
                 return (
                     <div className="article">
-                        <p className="news_author">{author}</p>
-                        <p className="news_text">{text}</p>
+                        <p className="news-author">{author}</p>
+                        <p className="news-text">{text}</p>
+                        {!visible && <a onClick={this.hendleReadMoreClick} href="#" className="news-readmore">Подробнее</a>}
+                        {visible && <p className="news-big-text">{bigText}</p>}
                     </div>
                 )
             }
         }
-        
+        /*Article.propTypes = {
+            data: PropTypes.shape ({
+                author: PropTypes.string.isRequired,
+                text: PropTypes.string.isRequired,
+                bigText: PropTypes.string.isRequired
+            })
+        }*/
+         
         const App = () => {
             return (
                 <div>
@@ -114,7 +135,7 @@
                 </div>
                 )
         }
-
+ 
         ReactDOM.render(
             <App />,
             document.getElementById('root')
